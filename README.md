@@ -1,4 +1,4 @@
-# Wordsetc
+# WordsEtc
 
 To start your Phoenix server:
 
