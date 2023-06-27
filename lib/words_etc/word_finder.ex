@@ -32,7 +32,7 @@ defmodule WordsEtc.WordFinder do
   @impl true
   def handle_call({:define, word}, _from, state) when is_binary(word) do
     definition =
-      Map.get(state.dict, word, nil)
+      Map.get(state.dict, String.downcase(word), nil)
       |> case do
         nil -> {:error, :not_found}
         definition -> {:ok, definition}
@@ -43,17 +43,18 @@ defmodule WordsEtc.WordFinder do
 
   @impl true
   def handle_call({:words, letters}, _from, state) when is_binary(letters) do
-    words =
+    result =
       Permutations.all(letters)
       |> Enum.map(&Map.get(state.find, &1, []))
       |> List.flatten()
       |> Enum.sort()
+      |> Enum.uniq()
       |> case do
         [] -> {:error, :not_found}
         words -> {:ok, words}
       end
 
-    {:reply, words, state}
+    {:reply, result, state}
   end
 
   # ----------------------------------------------------------------------------

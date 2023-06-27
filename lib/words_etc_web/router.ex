@@ -18,6 +18,7 @@ defmodule WordsEtcWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+    post "/", PageController, :solve
   end
 
   # Other scopes may use custom stacks.

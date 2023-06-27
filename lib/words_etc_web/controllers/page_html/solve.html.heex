@@ -1,0 +1,24 @@
+<div>
+  <h3>Word solver</h3>
+
+  <form action="/" method="POST">
+    <input type="hidden" name="_csrf_token" value={Plug.CSRFProtection.get_csrf_token()} />
+    <input type="text" name="letters" value={@letters} />
+    <input type="submit" value="Solve!" />
+  </form>
+
+  <h3>Solutions</h3>
+  <%= if assigns[:error] do %>
+  <p>{@error}</p>
+  <% else %>
+  <%= for {count, words} <- @solutions do %>
+  <h4><%= count %> letters</h4>
+  <ul>
+    <%= for {word, definition} <- words do %>
+    <li title={definition}><%= word %></li>
+    <% end %>
+  </ul>
+  <%= end %>
+  <% end %>
+
+</div>
