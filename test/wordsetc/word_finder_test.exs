@@ -13,6 +13,10 @@ defmodule Wordsetc.WordFinderTest do
     test "word not found" do
       assert {:error, :not_found} = WordFinder.define("macee")
     end
+
+    test "called with empty string" do
+      assert {:error, :not_found} = WordFinder.define("")
+    end
   end
 
   describe "words" do
@@ -22,6 +26,10 @@ defmodule Wordsetc.WordFinderTest do
 
     test "no words found" do
       assert {:error, :not_found} = WordFinder.words("qqq")
+    end
+
+    test "called with emtpy string" do
+      assert {:error, :not_found} = WordFinder.words("")
     end
   end
 end
