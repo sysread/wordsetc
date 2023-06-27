@@ -1,6 +1,7 @@
 defmodule WordsEtc.Permutations do
   def all(str) do
     str
+    |> String.downcase()
     |> String.graphemes()
     |> all_subsets()
     |> Enum.map(fn subset -> permutations(subset) end)

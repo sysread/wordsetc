@@ -2,6 +2,7 @@ defmodule WordsEtc.WordFinder do
   use GenServer
 
   alias WordsEtc.Permutations
+  alias WordsEtc.Scoring
 
   # ----------------------------------------------------------------------------
   # Client
@@ -18,6 +19,10 @@ defmodule WordsEtc.WordFinder do
     GenServer.call(__MODULE__, {:words, letters})
   end
 
+  def solve(letters) do
+    GenServer.call(__MODULE__, {:solve, letters})
+  end
+
   # ----------------------------------------------------------------------------
   # Server
   # ----------------------------------------------------------------------------
@@ -32,7 +37,8 @@ defmodule WordsEtc.WordFinder do
   @impl true
   def handle_call({:define, word}, _from, state) when is_binary(word) do
     definition =
-      Map.get(state.dict, String.downcase(word), nil)
+      word
+      |> get_def(state)
       |> case do
         nil -> {:error, :not_found}
         definition -> {:ok, definition}
@@ -44,17 +50,44 @@ defmodule WordsEtc.WordFinder do
   @impl true
   def handle_call({:words, letters}, _from, state) when is_binary(letters) do
     result =
-      Permutations.all(letters)
-      |> Enum.map(&Map.get(state.find, &1, []))
-      |> List.flatten()
-      |> Enum.sort()
-      |> Enum.uniq()
+      get_words(letters, state)
       |> case do
         [] -> {:error, :not_found}
         words -> {:ok, words}
       end
 
     {:reply, result, state}
+  end
+
+  @impl true
+  def handle_call({:solve, letters}, _from, state) when is_binary(letters) do
+    result =
+      get_words(letters, state)
+      |> Enum.map(fn word ->
+        score = Scoring.calculate(word)
+        definition = get_def(word, state) || "definition not found"
+        {word, score, definition}
+      end)
+      |> Enum.group_by(fn {word, _score, _definition} -> String.length(word) end)
+      |> Enum.map(fn {key, value} ->
+        {key, Enum.sort_by(value, fn {_word, score, _definition} -> score end, &>=/2)}
+      end)
+      |> Enum.sort_by(fn {count, _words} -> count end, &>=/2)
+
+    {:reply, {:ok, result}, state}
+  end
+
+  defp get_words(letters, state) do
+    letters
+    |> Permutations.all()
+    |> Enum.map(&Map.get(state.find, &1, []))
+    |> List.flatten()
+    |> Enum.sort()
+    |> Enum.uniq()
+  end
+
+  defp get_def(word, state) do
+    Map.get(state.dict, String.downcase(word), nil)
   end
 
   # ----------------------------------------------------------------------------

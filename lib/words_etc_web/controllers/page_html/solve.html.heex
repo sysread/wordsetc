@@ -14,11 +14,11 @@
   <%= for {count, words} <- @solutions do %>
   <h4><%= count %> letters</h4>
   <ul>
-    <%= for {word, definition} <- words do %>
-    <li title={definition}><%= word %></li>
+    <%= for {word, score, definition} <- words do %>
+    <li title={definition}><%= word %> <b>(<%= score %> points)</b></li>
     <% end %>
   </ul>
-  <%= end %>
+  <% end %>
   <% end %>
 
 </div>

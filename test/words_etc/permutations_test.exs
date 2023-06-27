@@ -33,4 +33,13 @@ defmodule WordsEtc.PermutationsTest do
              "cba"
            ] = Permutations.all("abc")
   end
+
+  test "casing" do
+    assert [
+             "a",
+             "ab",
+             "b",
+             "ba"
+           ] = Permutations.all("AB")
+  end
 end
