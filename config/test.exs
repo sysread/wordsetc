@@ -6,7 +6,7 @@ import Config
 # to provide built-in test partitioning in CI environment.
 # Run `mix help test` for more information.
 config :wordsetc, Wordsetc.Repo,
-  database: Path.expand("../wordsetc_test.db", Path.dirname(__ENV__.file)),
+  database: Path.expand("../priv/repo/wordsetc_test.db", Path.dirname(__ENV__.file)),
   pool_size: 5,
   pool: Ecto.Adapters.SQL.Sandbox
 

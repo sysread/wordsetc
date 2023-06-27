@@ -17,9 +17,10 @@ defmodule Wordsetc.Application do
       # Start Finch
       {Finch, name: Wordsetc.Finch},
       # Start the Endpoint (http/https)
-      WordsetcWeb.Endpoint
+      WordsetcWeb.Endpoint,
       # Start a worker by calling: Wordsetc.Worker.start_link(arg)
       # {Wordsetc.Worker, arg}
+      Wordsetc.WordFinder.Supervisor
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
