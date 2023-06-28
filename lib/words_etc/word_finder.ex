@@ -11,14 +11,6 @@ defmodule WordsEtc.WordFinder do
     GenServer.start_link(__MODULE__, nil, name: __MODULE__)
   end
 
-  def define(word) do
-    GenServer.call(__MODULE__, {:define, word})
-  end
-
-  def words(letters) do
-    GenServer.call(__MODULE__, {:words, letters})
-  end
-
   def solve(letters) do
     GenServer.call(__MODULE__, {:solve, letters})
   end
@@ -31,49 +23,17 @@ defmodule WordsEtc.WordFinder do
     dict = build_dictionary()
     find = dict |> Map.keys() |> build_lookup_table()
 
-    {:ok, %{dict: dict, find: find}}
-  end
+    state = %{
+      dict: dict,
+      find: find
+    }
 
-  @impl true
-  def handle_call({:define, word}, _from, state) when is_binary(word) do
-    definition =
-      word
-      |> get_def(state)
-      |> case do
-        nil -> {:error, :not_found}
-        definition -> {:ok, definition}
-      end
-
-    {:reply, definition, state}
-  end
-
-  @impl true
-  def handle_call({:words, letters}, _from, state) when is_binary(letters) do
-    result =
-      get_words(letters, state)
-      |> case do
-        [] -> {:error, :not_found}
-        words -> {:ok, words}
-      end
-
-    {:reply, result, state}
+    {:ok, state}
   end
 
   @impl true
   def handle_call({:solve, letters}, _from, state) when is_binary(letters) do
-    result =
-      get_words(letters, state)
-      |> Enum.map(fn word ->
-        score = Scoring.calculate(word)
-        definition = get_def(word, state) || "definition not found"
-        {word, score, definition}
-      end)
-      |> Enum.group_by(fn {word, _score, _definition} -> String.length(word) end)
-      |> Enum.map(fn {key, value} ->
-        {key, Enum.sort_by(value, fn {_word, score, _definition} -> score end, &>=/2)}
-      end)
-      |> Enum.sort_by(fn {count, _words} -> count end, &>=/2)
-
+    result = solve(letters, state)
     {:reply, {:ok, result}, state}
   end
 
@@ -85,7 +45,7 @@ defmodule WordsEtc.WordFinder do
     |> File.stream!()
     |> Enum.map(fn line ->
       [word, definition] = String.split(line, " ", parts: 2)
-      {String.downcase(word), String.trim(definition)}
+      {String.upcase(word), String.trim(definition)}
     end)
     |> Enum.into(%{})
   end
@@ -104,9 +64,23 @@ defmodule WordsEtc.WordFinder do
     end)
   end
 
+  defp solve(letters, state) do
+    get_words(letters, state)
+    |> Enum.map(fn word ->
+      score = Scoring.calculate(word)
+      definition = get_definition(word, state)
+      {word, score, definition}
+    end)
+    |> Enum.group_by(fn {word, _score, _definition} -> String.length(word) end)
+    |> Enum.map(fn {key, value} ->
+      {key, Enum.sort_by(value, fn {_word, score, _definition} -> score end, &>=/2)}
+    end)
+    |> Enum.sort_by(fn {count, _words} -> count end, &>=/2)
+  end
+
   defp sort_word(word) do
     word
-    |> String.downcase()
+    |> String.upcase()
     |> String.graphemes()
     |> Enum.sort()
     |> Enum.join()
@@ -122,10 +96,12 @@ defmodule WordsEtc.WordFinder do
     |> Enum.map(&String.upcase/1)
   end
 
-  defp get_def(word, state) do
-    Map.get(state.dict, String.downcase(word), nil)
+  defp get_definition(word, state) do
+    Map.get(state.dict, String.upcase(word), nil)
     |> parse_definition(state)
   end
+
+  defp parse_definition(nil, _state), do: "definition not found"
 
   defp parse_definition(input, state) do
     definition =
@@ -137,9 +113,9 @@ defmodule WordsEtc.WordFinder do
     |> Enum.reject(&(&1 == " "))
     |> case do
       # <ad=n> [n]
-      ["<", word, "=", _, "[", _, "]"] -> get_def(word, state)
+      ["<", word, "=", _, "[", _, "]"] -> get_definition(word, state)
       # <advertisement=n> [n]
-      ["<", word, "=", _, ">", "[", _, "]"] -> get_def(word, state)
+      ["<", word, "=", _, ">", "[", _, "]"] -> get_definition(word, state)
       # [n ADVERTISEMENTS]
       ["[", _, word, "]"] -> word
       # Otherwise, just return the cleaned up definition
