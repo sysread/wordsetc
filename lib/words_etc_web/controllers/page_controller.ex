@@ -20,6 +20,7 @@ defmodule WordsEtcWeb.PageController do
 
       {:ok, words} ->
         conn
+        |> assign(:error, nil)
         |> assign(:solutions, words)
     end
     |> assign(:letters, letters)

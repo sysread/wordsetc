@@ -1,9 +1,1 @@
-<div>
-  <h3>Word solver</h3>
-
-  <form action="/" method="POST">
-    <input type="hidden" name="_csrf_token" value={Plug.CSRFProtection.get_csrf_token()} />
-    <input type="text" name="letters" />
-    <input type="submit" value="Solve!" />
-  </form>
-</div>
+<WordsEtcWeb.Components.WordSolverForm.render action="/", letters="" />
