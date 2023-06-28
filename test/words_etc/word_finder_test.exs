@@ -9,14 +9,34 @@ defmodule WordsEtc.WordFinderTest do
               [
                 {3,
                  [
-                   {"cab", 7, "to take or drive a taxicab [v CABBED, CABBING, CABS]"}
+                   {"BAC", 7, "short for a lounge singer"},
+                   {"CAB", 7, "a taxi i guess"}
                  ]},
                 {2,
                  [
-                   {"ab", 4, "an abdominal muscle [n ABS]"},
-                   {"ba", 4, "the eternal soul, in Egyptian mythology [n BAS]"}
+                   {"BA", 4, "yadda yadda yadda"},
+                   {"CA", 4, "fnord fnord fnord"}
                  ]}
-              ]} = WordFinder.solve("abc")
+              ]} =
+               WordFinder.solve("abc")
+    end
+
+    test "wildcards" do
+      assert {:ok,
+              [
+                {3,
+                 [
+                   {"CAb", 4, "a taxi i guess"},
+                   {"bAC", 4, "short for a lounge singer"}
+                 ]},
+                {2,
+                 [
+                   {"CA", 4, "fnord fnord fnord"},
+                   {"AA", 2, "blah blah blah"},
+                   {"bA", 1, "yadda yadda yadda"}
+                 ]}
+              ]} =
+               WordFinder.solve("a?c")
     end
   end
 end

@@ -5,41 +5,41 @@ defmodule WordsEtc.PermutationsTest do
 
   test "permutations" do
     assert [
-             "a"
-           ] = Permutations.all("a")
+             "A"
+           ] = Permutations.all("A")
 
     assert [
-             "a",
-             "ab",
-             "b",
-             "ba"
-           ] = Permutations.all("ab")
+             "A",
+             "AB",
+             "B",
+             "BA"
+           ] = Permutations.all("AB")
 
     assert [
-             "a",
-             "ab",
-             "abc",
-             "ac",
-             "acb",
-             "b",
-             "ba",
-             "bac",
-             "bc",
-             "bca",
-             "c",
-             "ca",
-             "cab",
-             "cb",
-             "cba"
-           ] = Permutations.all("abc")
+             "A",
+             "AB",
+             "ABC",
+             "AC",
+             "ACB",
+             "B",
+             "BA",
+             "BAC",
+             "BC",
+             "BCA",
+             "C",
+             "CA",
+             "CAB",
+             "CB",
+             "CBA"
+           ] = Permutations.all("ABC")
   end
 
   test "casing" do
     assert [
-             "a",
-             "ab",
-             "b",
-             "ba"
+             "A",
+             "AB",
+             "B",
+             "BA"
            ] = Permutations.all("AB")
   end
 end

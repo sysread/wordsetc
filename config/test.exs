@@ -22,3 +22,7 @@ config :logger, level: :warning
 
 # Initialize plugs at runtime for faster test compilation
 config :phoenix, :plug_init_mode, :runtime
+
+# Path to the dictionary file
+config :words_etc, WordsEtc.WordFinder,
+  dictionary_path: Path.expand("../test/support/words.txt", Path.dirname(__ENV__.file))

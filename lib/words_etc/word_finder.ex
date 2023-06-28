@@ -65,7 +65,7 @@ defmodule WordsEtc.WordFinder do
     get_words(letters, state)
     |> Enum.map(fn word ->
       score = Scoring.calculate(word)
-      definition = get_definition(word, state)
+      definition = word |> String.upcase() |> get_definition(state)
       {word, score, definition}
     end)
     |> Enum.group_by(fn {word, _score, _definition} -> String.length(word) end)
@@ -86,11 +86,46 @@ defmodule WordsEtc.WordFinder do
   defp get_words(letters, state) do
     letters
     |> Permutations.all()
-    |> Enum.map(&Map.get(state.find, &1, []))
-    |> List.flatten()
+    |> Enum.flat_map(&Map.get(state.find, String.upcase(&1), []))
+    |> Enum.map(&lowercase_matches(letters, &1))
     |> Enum.sort()
     |> Enum.uniq()
-    |> Enum.map(&String.upcase/1)
+  end
+
+  # ----------------------------------------------------------------------------
+  # When scoring words, we want to make sure we are not counting letters that
+  # came from wildcards. To do this, we lowercase the letters in the original
+  # word (from Permutations.all), and then lowercase the letters in the word
+  # that do not appear in the original input. We use a frequency map to count
+  # the number of times each letter appears in the original input, and then
+  # decrement that count each time we use a letter from the second word.
+  # ----------------------------------------------------------------------------
+  def lowercase_matches(original, second) do
+    freq_map = original |> String.downcase() |> String.replace("?", "") |> freq_map()
+
+    second
+    |> String.graphemes()
+    |> Enum.reduce("", fn char, acc ->
+      downcased_char = String.downcase(char)
+
+      case freq_map[downcased_char] do
+        nil ->
+          acc <> String.downcase(char)
+
+        0 ->
+          acc <> String.downcase(char)
+
+        _ ->
+          Map.put(freq_map, downcased_char, freq_map[downcased_char] - 1)
+          acc <> char
+      end
+    end)
+  end
+
+  defp freq_map(string) do
+    string
+    |> String.graphemes()
+    |> Enum.reduce(%{}, fn char, acc -> Map.update(acc, char, 1, &(&1 + 1)) end)
   end
 
   defp get_definition(word, state) do

@@ -30,7 +30,6 @@ defmodule WordsEtc.Scoring do
 
   def calculate(word) do
     word
-    |> String.upcase()
     |> String.graphemes()
     |> Enum.map(fn letter -> Map.get(@letter_scores, letter, 0) end)
     |> Enum.sum()
