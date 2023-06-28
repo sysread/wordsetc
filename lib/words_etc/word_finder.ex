@@ -55,11 +55,8 @@ defmodule WordsEtc.WordFinder do
       sorted_word = sort_word(word)
 
       case Map.get(acc, sorted_word) do
-        nil ->
-          Map.put(acc, sorted_word, [word])
-
-        word_list ->
-          Map.put(acc, sorted_word, [word | word_list])
+        nil -> Map.put(acc, sorted_word, [word])
+        word_list -> Map.put(acc, sorted_word, [word | word_list])
       end
     end)
   end
