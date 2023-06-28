@@ -77,19 +77,6 @@ defmodule WordsEtc.WordFinder do
     {:reply, {:ok, result}, state}
   end
 
-  defp get_words(letters, state) do
-    letters
-    |> Permutations.all()
-    |> Enum.map(&Map.get(state.find, &1, []))
-    |> List.flatten()
-    |> Enum.sort()
-    |> Enum.uniq()
-  end
-
-  defp get_def(word, state) do
-    Map.get(state.dict, String.downcase(word), nil)
-  end
-
   # ----------------------------------------------------------------------------
   # Internal functions
   # ----------------------------------------------------------------------------
@@ -123,5 +110,40 @@ defmodule WordsEtc.WordFinder do
     |> String.graphemes()
     |> Enum.sort()
     |> Enum.join()
+  end
+
+  defp get_words(letters, state) do
+    letters
+    |> Permutations.all()
+    |> Enum.map(&Map.get(state.find, &1, []))
+    |> List.flatten()
+    |> Enum.sort()
+    |> Enum.uniq()
+    |> Enum.map(&String.upcase/1)
+  end
+
+  defp get_def(word, state) do
+    Map.get(state.dict, String.downcase(word), nil)
+    |> parse_definition(state)
+  end
+
+  defp parse_definition(input, state) do
+    definition =
+      input
+      |> String.trim()
+      |> String.replace(~r/{(\w+)=\w+}/, "\\1", global: true)
+
+    Regex.split(~r/[\s\b\W]/, definition, trim: true, include_captures: true)
+    |> Enum.reject(&(&1 == " "))
+    |> case do
+      # <ad=n> [n]
+      ["<", word, "=", _, "[", _, "]"] -> get_def(word, state)
+      # <advertisement=n> [n]
+      ["<", word, "=", _, ">", "[", _, "]"] -> get_def(word, state)
+      # [n ADVERTISEMENTS]
+      ["[", _, word, "]"] -> word
+      # Otherwise, just return the cleaned up definition
+      _ -> definition
+    end
   end
 end
