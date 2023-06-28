@@ -49,12 +49,14 @@ defmodule WordsEtc.Permutations do
   # ----------------------------------------------------------------------------
   defp permutations([]), do: [""]
 
-  defp permutations(list) do
-    list
-    |> Enum.flat_map(fn x ->
-      List.delete(list, x)
-      |> permutations()
-      |> Enum.map(fn perm -> "#{x}#{perm}" end)
-    end)
+  defp permutations(list), do: do_permutations(list, [])
+
+  defp do_permutations([], _acc), do: []
+
+  defp do_permutations([head | tail], acc) do
+    rest = acc ++ tail
+    perms = rest |> permutations()
+    new_perms = Enum.reduce(perms, [], fn p, acc -> [head <> p | acc] end)
+    new_perms ++ do_permutations(tail, [head | acc])
   end
 end
