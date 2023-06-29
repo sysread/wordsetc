@@ -1,18 +1,59 @@
-# WordsEtc
+# Words, Etc.
 
-To start your Phoenix server:
+Words, Etc. is a simple, stateless Scrabble solver built with Phoenix and
+Elixir. It allows users to input a set of letters and provides possible word
+solutions, each grouped by the number of letters, complete with definitions and
+Scrabble scores.
 
-  * Run `mix setup` to install and setup dependencies
-  * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
+## Prerequisites
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+- Elixir 1.15.0
+- OTP 26.0.1
+- Node.js (for asset compilation)
+- Docker (optional)
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
+## Setup
 
-## Learn more
+To start the Words, Etc. application:
 
-  * Official website: https://www.phoenixframework.org/
-  * Guides: https://hexdocs.pm/phoenix/overview.html
-  * Docs: https://hexdocs.pm/phoenix
-  * Forum: https://elixirforum.com/c/phoenix-forum
-  * Source: https://github.com/phoenixframework/phoenix
+  - Install dependencies with 'mix deps.get'
+  - Create and migrate your database with 'mix ecto.setup'
+  - Install Node.js dependencies with 'npm install' inside the 'assets' directory
+  - Start Phoenix endpoint with 'mix phx.server'
+
+Now you can visit 'localhost:4000' from your browser.
+
+## Using Docker
+
+As an alternative to the above steps, you can also run the application using
+Docker. Build the Docker image using:
+
+```
+docker build -t words_etc .
+```
+
+And then run the application:
+
+```
+docker run -p 4000:4000 -d words_etc
+```
+
+Now you can visit 'localhost:4000' from your browser.
+
+## Usage
+
+Just enter your letters in the provided input field and press 'Submit'. The
+application will return a list of possible words, each grouped by the number of
+letters. For each word, the application provides its definition and Scrabble
+score.
+
+## Contributing
+
+Pull requests are welcome. For major changes, please open an issue first to
+discuss what you would like to change.
+
+Please make sure to update tests as appropriate.
+
+## License
+
+[MIT](https://choosealicense.com/licenses/mit/)
