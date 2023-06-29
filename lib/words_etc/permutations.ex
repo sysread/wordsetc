@@ -55,9 +55,12 @@ defmodule WordsEtc.Permutations do
   @spec all_subsets(permutations()) :: permutations()
   defp all_subsets(list) do
     list
-    |> Enum.reduce([[]], fn perm, acc ->
-      acc ++ Enum.map(acc, &[perm | &1])
+    |> Enum.reduce([[]], fn element, acc ->
+      acc ++
+        for subset <- acc do
+          [element | subset]
+        end
     end)
-    |> Enum.reject(fn x -> x == [] end)
+    |> Enum.reject(&Enum.empty?/1)
   end
 end
