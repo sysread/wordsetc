@@ -1,4 +1,6 @@
 defmodule WordsEtc.Permutations do
+  alias WordsEtc.TaskPool
+
   @type letters :: [String.grapheme()]
   @type permutations :: [letters()]
 
@@ -8,15 +10,19 @@ defmodule WordsEtc.Permutations do
     str
     |> String.upcase()
     |> expand_wildcards()
-    |> Enum.flat_map(&all_subsets/1)
-    |> Enum.map(fn permutation ->
-      Enum.sort(permutation, fn a, b ->
-        String.upcase(a) <= String.upcase(b)
-      end)
-    end)
+    |> TaskPool.flat_map(&all_subsets/1)
+    |> TaskPool.map(&upcase_sort/1)
     |> Enum.map(&Enum.join(&1, ""))
     |> Enum.uniq_by(&String.upcase/1)
-    |> Enum.sort(&(String.upcase(&1) <= String.upcase(&2)))
+    |> Enum.sort(&upcase_lte/2)
+  end
+
+  defp upcase_sort(list) do
+    Enum.sort(list, &upcase_lte/2)
+  end
+
+  defp upcase_lte(a, b) do
+    String.upcase(a) <= String.upcase(b)
   end
 
   # ----------------------------------------------------------------------------
@@ -36,13 +42,9 @@ defmodule WordsEtc.Permutations do
       # first ? replaced by that letter.
       @alphabet
       |> Enum.map(&String.replace(str, "?", &1, global: false))
-      |> Enum.flat_map(&expand_wildcards/1)
+      |> TaskPool.flat_map(&expand_wildcards/1)
     else
-      [
-        str
-        |> String.graphemes()
-        |> Enum.sort(&(String.upcase(&1) <= String.upcase(&2)))
-      ]
+      [str |> String.graphemes()]
     end
   end
 
@@ -53,8 +55,8 @@ defmodule WordsEtc.Permutations do
   @spec all_subsets(permutations()) :: permutations()
   defp all_subsets(list) do
     list
-    |> Enum.reduce([[]], fn element, acc ->
-      acc ++ Enum.map(acc, &[element | &1])
+    |> Enum.reduce([[]], fn perm, acc ->
+      acc ++ Enum.map(acc, &[perm | &1])
     end)
     |> Enum.reject(fn x -> x == [] end)
   end
