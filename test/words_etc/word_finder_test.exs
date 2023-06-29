@@ -31,9 +31,9 @@ defmodule WordsEtc.WordFinderTest do
                  ]},
                 {2,
                  [
-                   {"CC", 6, "like BB but with Cs"},
                    {"CA", 4, "fnord fnord fnord"},
-                   {"AA", 2, "blah blah blah"},
+                   {"Cc", 3, "like BB but with Cs"},
+                   {"Aa", 1, "blah blah blah"},
                    {"bA", 1, "yadda yadda yadda"}
                  ]}
               ]} =

@@ -6,6 +6,7 @@ defmodule WordsEtc.Permutations do
 
   @alphabet String.split("abcdefghijklmnopqrstuvwxyz", "", trim: true)
 
+  @spec all(String.t()) :: [String.t()]
   def all(str) do
     str
     |> String.upcase()
@@ -17,13 +18,11 @@ defmodule WordsEtc.Permutations do
     |> Enum.sort(&upcase_lte/2)
   end
 
-  defp upcase_sort(list) do
-    Enum.sort(list, &upcase_lte/2)
-  end
-
-  defp upcase_lte(a, b) do
-    String.upcase(a) <= String.upcase(b)
-  end
+  # ----------------------------------------------------------------------------
+  # Sorts a list of variously cased strings in a case-insensitive manner.
+  # ----------------------------------------------------------------------------
+  defp upcase_sort(list), do: Enum.sort(list, &upcase_lte/2)
+  defp upcase_lte(a, b), do: String.upcase(a) <= String.upcase(b)
 
   # ----------------------------------------------------------------------------
   # For a given list of characters, return a list of lists, where each
