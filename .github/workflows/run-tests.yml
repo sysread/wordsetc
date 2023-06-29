@@ -15,10 +15,10 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Setup elixir
-      uses: actions/setup-elixir@v1
+    - name: Setup Elixir
+      uses: erlef/setup-elixir@v1
       with:
-        elixir-version: 1.11.4
+        elixir-version: 1.15.0
         otp-version: 26.0.1
 
     - name: Restore dependencies and _build
@@ -30,7 +30,7 @@ jobs:
         key: ${{ runner.os }}-mix-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
         restore-keys: |
           ${{ runner.os }}-mix-
-          
+
     - name: Install Dependencies
       run: mix deps.get
 
