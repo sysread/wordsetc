@@ -1,5 +1,7 @@
 AA blah blah blah
 BA yadda yadda yadda
+BAC short for a lounge singer
+BB like AA but with Bs
 CA fnord fnord fnord
 CAB a taxi i guess
-BAC short for a lounge singer
+CC like BB but with Cs

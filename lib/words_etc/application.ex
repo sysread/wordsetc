@@ -18,7 +18,8 @@ defmodule WordsEtc.Application do
       WordsEtcWeb.Endpoint,
       # Start a worker by calling: WordsEtc.Worker.start_link(arg)
       # {WordsEtc.Worker, arg}
-      WordsEtc.WordFinder.Supervisor
+      WordsEtc.WordFinderSupervisor,
+      {Task.Supervisor, name: WordsEtc.TaskSupervisor}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

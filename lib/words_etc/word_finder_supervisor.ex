@@ -1,4 +1,4 @@
-defmodule WordsEtc.WordFinder.Supervisor do
+defmodule WordsEtc.WordFinderSupervisor do
   use Supervisor
 
   def start_link(arg) do
