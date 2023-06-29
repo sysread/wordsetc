@@ -41,7 +41,7 @@ defmodule WordsEtc.Permutations do
       # For each alphabet letter, create a copy of the input string with the
       # first ? replaced by that letter.
       @alphabet
-      |> Enum.map(&String.replace(str, "?", &1, global: false))
+      |> TaskPool.map(&String.replace(str, "?", &1, global: false))
       |> TaskPool.flat_map(&expand_wildcards/1)
     else
       [str |> String.graphemes()]
@@ -49,8 +49,8 @@ defmodule WordsEtc.Permutations do
   end
 
   # ----------------------------------------------------------------------------
-  # For a list of characters, produce a list of all possible subsets of those
-  # characters.
+  # For a list of lists of characters, produce a list of all possible subsets
+  # of those character lists.
   # ----------------------------------------------------------------------------
   @spec all_subsets(permutations()) :: permutations()
   defp all_subsets(list) do
