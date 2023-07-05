@@ -1,5 +1,7 @@
-.PHONY: help build run daemon mix_env
-DEFAULT_GOAL: help
+.PHONY: help mix_env build run daemon shell
+DEFAULT_GOAL: default
+
+default: build run
 
 ## Builds the docker image
 build: mix_env
@@ -12,6 +14,10 @@ run: mix_env
 ## Runs the docker image in daemon mode
 daemon: mix_env
 	docker run -p 4000:4000 --env-file .env -d words_etc
+
+## Opens a shell in the docker image
+shell: mix_env
+	docker run -p 4000:4000 --env-file .env -it --entrypoint /bin/sh words_etc
 
 ## Displays the current mix environment
 mix_env:

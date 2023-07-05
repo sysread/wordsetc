@@ -1,12 +1,7 @@
 # ------------------------------------------------------------------------------
 # Build stage
 # ------------------------------------------------------------------------------
-FROM elixir:1.15.0 AS build
-
-# Install sqlite3
-RUN apt-get update && \
-    apt-get install -y sqlite3 && \
-    rm -rf /var/lib/apt/lists/*
+FROM elixir:1.15 AS build
 
 # Install hex and rebar
 RUN mix local.hex --force && \
@@ -42,11 +37,17 @@ RUN mix release
 # ------------------------------------------------------------------------------
 # App stage
 # ------------------------------------------------------------------------------
-FROM build AS app
+FROM elixir:1.15-slim AS app
+
+# Set the environment to production
+ENV MIX_ENV=prod
 
 # We set the workdir and copy our release from the previous stage.
 WORKDIR /app
 COPY --from=build /app/_build/prod/rel/* ./
+
+RUN mkdir /app/dictionary
+COPY priv/words/words.txt /app/dictionary/words.txt
 
 # Expose the port for Phoenix
 EXPOSE 4000

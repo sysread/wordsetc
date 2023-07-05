@@ -60,6 +60,12 @@ if config_env() == :prod do
     secret_key_base: secret_key_base,
     server: true
 
+  # Path to the dictionary file
+  config :words_etc, WordsEtc.WordFinder,
+    dictionary_path:
+      System.get_env("DICTIONARY_PATH") ||
+        Path.expand("../priv/words/words.txt", Path.dirname(__ENV__.file))
+
   # ## SSL Support
   #
   # To get SSL working, you will need to add the `https` key
