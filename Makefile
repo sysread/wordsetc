@@ -1,6 +1,9 @@
 .PHONY: help mix_env build run daemon shell
 DEFAULT_GOAL: default
 
+# Default to port 4000 if no PORT variable is provided
+PORT ?= 4000
+
 default: build run
 
 ## Builds the docker image
@@ -9,18 +12,18 @@ build: mix_env
 
 ## Runs the docker image
 run: mix_env
-	docker run -p 4000:4000 --env-file .env -it words_etc
+	docker run -p $(PORT):4000 --env-file .env -it words_etc
 
 ## Runs the docker image in daemon mode
 daemon: mix_env
-	docker run -p 4000:4000 --env-file .env -d words_etc
+	docker run -p $(PORT):4000 --env-file .env -d words_etc
 
 ## Opens a shell in the docker image
 shell: mix_env
-	docker run -p 4000:4000 --env-file .env -it --entrypoint /bin/sh words_etc
+	docker run -p $(PORT):4000 --env-file .env -it --entrypoint /bin/sh words_etc
 
-## Runs the application locally
-local:
+## Runs the application locally in dev mode
+dev:
 	MIX_ENV=dev mix phx.server
 
 ## Displays the current mix environment
