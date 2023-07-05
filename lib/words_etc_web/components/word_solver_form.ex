@@ -25,6 +25,9 @@ defmodule WordsEtcWeb.Components.WordSolverForm do
             required
             pattern="[a-zA-Z]*"
             value={@letters}
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off"
           />
           <div class="invalid-feedback">Please enter letters only.</div>
         </div>
