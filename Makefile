@@ -19,6 +19,10 @@ daemon: mix_env
 shell: mix_env
 	docker run -p 4000:4000 --env-file .env -it --entrypoint /bin/sh words_etc
 
+## Runs the application locally
+local:
+	MIX_ENV=dev mix phx.server
+
 ## Displays the current mix environment
 mix_env:
 	@echo "MIX_ENV: $(MIX_ENV)"
