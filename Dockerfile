@@ -9,6 +9,9 @@ RUN mix local.hex --force && \
 # Set the workdir inside the container
 WORKDIR /app
 
+# Set the environment to production
+ENV MIX_ENV=prod
+
 # Copy the dependency definition files into the container
 COPY mix.exs mix.lock ./
 
@@ -22,13 +25,13 @@ RUN mix deps.compile
 COPY . .
 
 # Compile the entire project.
-RUN MIX_ENV=prod mix compile
+RUN mix compile
 
 # Digest the static files.
-RUN MIX_ENV=prod mix phx.digest
+RUN mix phx.digest
 
 # Now we create our release
-RUN MIX_ENV=prod mix release
+RUN mix release
 
 # We are going to use a new stage for the runtime environment.
 FROM erlang:26-alpine
@@ -45,4 +48,3 @@ EXPOSE 4000
 
 # Set the entrypoint to our application start command
 CMD ["bin/wordsetc", "start"]
-
