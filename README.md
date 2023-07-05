@@ -14,35 +14,30 @@ Scrabble scores.
 
 ## Setup
 
+Clone the repository:
+
+```
+git clone https://github.com/sysread/wordsetc.git
+```
+
 To start the Words, Etc. application:
 
-  - Install dependencies with 'mix deps.get'
-  - Create and migrate your database with 'mix ecto.setup'
-  - Install Node.js dependencies with 'npm install' inside the 'assets' directory
-  - Start Phoenix endpoint with 'mix phx.server'
-
-Now you can visit 'localhost:4000' from your browser.
-
-## Using Docker
-
-As an alternative to the above steps, you can also run the application using
-Docker. Build the Docker image using:
-
 ```
-docker build -t words_etc .
+mix ecto.setup
+mix phx.server
 ```
 
-And then run the application:
+Or using the `Makefile` and `docker`:
 
 ```
-docker run -p 4000:4000 -d words_etc
+make PORT=4000
 ```
 
 Now you can visit 'localhost:4000' from your browser.
 
 ## Usage
 
-Just enter your letters in the provided input field and press 'Submit'. The
+Just enter your letters in the provided input field and press `Solve!`. The
 application will return a list of possible words, each grouped by the number of
 letters. For each word, the application provides its definition and Scrabble
 score.
