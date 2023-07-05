@@ -1,6 +1,12 @@
-# We are going to use a multi-stage build process.
-# First we define our build stage.
+# ------------------------------------------------------------------------------
+# Build stage
+# ------------------------------------------------------------------------------
 FROM elixir:1.15.0 AS build
+
+# Install sqlite3
+RUN apt-get update && \
+    apt-get install -y sqlite3 && \
+    rm -rf /var/lib/apt/lists/*
 
 # Install hex and rebar
 RUN mix local.hex --force && \
@@ -33,11 +39,10 @@ RUN mix phx.digest
 # Now we create our release
 RUN mix release
 
-# We are going to use a new stage for the runtime environment.
-FROM erlang:26-alpine
-
-# Install sqlite
-RUN apk add --no-cache sqlite
+# ------------------------------------------------------------------------------
+# App stage
+# ------------------------------------------------------------------------------
+FROM build AS app
 
 # We set the workdir and copy our release from the previous stage.
 WORKDIR /app
@@ -47,4 +52,5 @@ COPY --from=build /app/_build/prod/rel/* ./
 EXPOSE 4000
 
 # Set the entrypoint to our application start command
-CMD ["bin/wordsetc", "start"]
+ENTRYPOINT ["bin/words_etc"]
+CMD ["start"]
