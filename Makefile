@@ -20,15 +20,16 @@ daemon: mix_env
 
 ## Opens a shell in the docker image
 shell: mix_env
-	docker run -p $(PORT):4000 --env-file .env -it --entrypoint /bin/sh words_etc
+	docker run --env-file .env -it --entrypoint /bin/sh words_etc
 
 ## Runs the application locally in dev mode
 dev:
-	MIX_ENV=dev mix phx.server
+	MIX_ENV=dev PORT=$(PORT) mix phx.server
 
 ## Displays the current mix environment
 mix_env:
 	@echo "MIX_ENV: $(MIX_ENV)"
+	@echo "PORT: $(PORT)"
 
 # ------------------------------------------------------------------------------
 # Displays the help menu, including any targets preceeded by a comment
