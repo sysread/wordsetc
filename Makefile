@@ -12,19 +12,24 @@ build: mix_env
 
 ## Runs the docker image
 run: mix_env
-	docker run -p $(PORT):4000 --env-file .env -it words_etc
+	docker run --name words_etc -p $(PORT):4000 --env-file .env -it words_etc
 
 ## Runs the docker image in daemon mode
 daemon: mix_env
-	docker run -p $(PORT):4000 --env-file .env -d words_etc
+	docker run --name words_etc -p $(PORT):4000 --env-file .env -d words_etc
 
 ## Opens a shell in the docker image
 shell: mix_env
-	docker run --env-file .env -it --entrypoint /bin/sh words_etc
+	docker run --name words_etc --env-file .env -it --entrypoint /bin/sh words_etc
 
 ## Runs the application locally in dev mode
 dev:
 	MIX_ENV=dev PORT=$(PORT) mix phx.server
+
+## Builds and runs the deamonized application in prod mode
+prod:
+	MIX_ENV=prod docker build -t words_etc .
+	MIX_ENV=prod docker run --name words_etc -p $(PORT):4000 --env-file .env -d words_etc
 
 ## Displays the current mix environment
 mix_env:
