@@ -6,13 +6,7 @@ defmodule WordsEtcWeb.Components.WordSolverForm do
     <div class="container py-4">
       <h3>Word solver</h3>
 
-      <form
-        id="word-solver-form"
-        action={@action}
-        method="POST"
-        class="needs-validation row g-3"
-        novalidate
-      >
+      <form id="word-solver-form" action={@action} method="POST" class="row g-3" novalidate>
         <input type="hidden" name="_csrf_token" value={Plug.CSRFProtection.get_csrf_token()} />
 
         <div class="col-6 position-relative">
@@ -23,9 +17,11 @@ defmodule WordsEtcWeb.Components.WordSolverForm do
             type="text"
             name="letters"
             class="form-control text-uppercase"
+            value={@letters}
             required
             pattern="[A-Z?]*"
-            value={@letters}
+            minlength="1"
+            maxlength="10"
             autocomplete="off"
             autocorrect="off"
             autocapitalize="off"
@@ -39,7 +35,15 @@ defmodule WordsEtcWeb.Components.WordSolverForm do
             X
           </button>
 
-          <div class="invalid-feedback">Please enter letters or ? only.</div>
+          <%= if @error do %>
+            <div class="validation-error invalid-feedback">
+              <%= @error %>
+            </div>
+          <% end %>
+
+          <div class="invalid-feedback">
+            Please enter 1-10 letters or ? for a wildcard tile.
+          </div>
         </div>
 
         <div class="col-4 d-flex align-items-end">
@@ -50,10 +54,15 @@ defmodule WordsEtcWeb.Components.WordSolverForm do
 
     <script type="text/javascript">
       $(document).ready(function() {
+        if ($(".validation-error").length > 0) {
+          $(".validation-error").show();
+        }
+
         // Clear form input when X is clicked
         $("#clear-letters").on('click', function() {
           $("#letters").val('');
           $("#letters").focus();
+          $("#word-solver-form").removeClass('was-validated').addClass('needs-validation');
         });
 
         // When form input is clicked, select all text in the input
@@ -63,28 +72,17 @@ defmodule WordsEtcWeb.Components.WordSolverForm do
 
         $("#letters").on('input', function() {
           $(this).val($(this).val().toUpperCase());
+          $("#word-solver-form").removeClass('was-validated').addClass('needs-validation');
         });
 
-        // Bootstrap form validation
-        (function () {
-          'use strict'
+        $("#word-solver-form").on('submit', function(e) {
+          if (!e.target.checkValidity()) {
+            e.preventDefault();
+            e.stopPropagation();
+          }
 
-          // Fetch all the forms we want to apply custom Bootstrap validation styles to
-          var forms = document.querySelectorAll('.needs-validation')
-
-          // Loop over them and prevent submission
-          Array.prototype.slice.call(forms)
-            .forEach(function (form) {
-              form.addEventListener('submit', function (event) {
-                if (!form.checkValidity()) {
-                  event.preventDefault()
-                  event.stopPropagation()
-                }
-
-                form.classList.add('was-validated')
-              }, false)
-            })
-        })()
+          $(this).addClass('was-validated');
+        });
       });
     </script>
     """

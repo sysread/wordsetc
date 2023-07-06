@@ -12,19 +12,32 @@ defmodule WordsEtcWeb.PageController do
   def solve(conn, params) do
     letters = Map.get(params, "letters", "")
 
-    case WordFinder.solve(letters) do
-      {:error, reason} ->
+    with {:ok, input} <- validate(letters),
+         {:ok, words} <- WordFinder.solve(input) do
+      conn
+      |> assign(:error, nil)
+      |> assign(:solutions, words)
+    else
+      {:invalid_input, reason} ->
         conn
         |> assign(:error, reason)
         |> assign(:solutions, [])
 
-      {:ok, words} ->
+      {:error, reason} ->
         conn
-        |> assign(:error, nil)
-        |> assign(:solutions, words)
+        |> assign(:error, reason)
+        |> assign(:solutions, [])
     end
     |> assign(:letters, letters)
     |> assign(:page_title, "Solutions")
     |> render(:solve, layout: false)
+  end
+
+  def validate(input) do
+    if input =~ ~r/^[a-zA-Z?]{1,10}$/i do
+      {:ok, String.upcase(input)}
+    else
+      {:invalid_input, "Expected between 1 and 10 letters or ? for wildcards"}
+    end
   end
 end
