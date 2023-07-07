@@ -3,6 +3,7 @@
 set -eux -o pipefail
 
 export MIX_ENV=prod
+export APP="_build/prod/rel/words_etc/bin/words_etc"
 
 # Ensure our database path exists
 sudo mkdir -p "$(dirname "$DATABASE_PATH")"
@@ -21,7 +22,19 @@ mix deps.get
 mix release --overwrite
 
 # Stop any existing instances of the app
-_build/prod/rel/words_etc/bin/words_etc stop || true
+if [[ -n "$(sudo $APP pid)" ]]; then
+  $APP stop || true
+fi
 
 # Start our app
-_build/prod/rel/words_etc/bin/words_etc daemon
+$APP daemon
+
+# Wait for the app to start
+sleep 5
+
+if [[ -z "$(sudo $APP pid)" ]]; then
+  echo "Application failed to start"
+  exit 1
+fi
+
+exit 0
