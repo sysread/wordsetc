@@ -1,3 +1,5 @@
+[![Test | Build | Deploy](https://github.com/sysread/wordsetc/actions/workflows/cicd.yml/badge.svg)](https://github.com/sysread/wordsetc/actions/workflows/cicd.yml)
+
 # Words, Etc.
 
 Words, Etc. is a simple, stateless Scrabble solver built with Phoenix and
