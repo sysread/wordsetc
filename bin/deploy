@@ -23,4 +23,4 @@ mix release --overwrite
 _build/prod/rel/words_etc/bin/words_etc stop || true
 
 # Start our app
-_build/prod/rel/words_etc/bin/words_etc start > deploy.log 2>&1
+_build/prod/rel/words_etc/bin/words_etc daemon
