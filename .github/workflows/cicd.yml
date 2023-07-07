@@ -42,48 +42,24 @@ jobs:
     - name: Run tests
       run: mix test
 
-  build:
+  deploy:
     needs: test
     runs-on: ubuntu-latest
 
     steps:
-    - name: Check out repository
-      uses: actions/checkout@v2
-
-    - name: Set up Docker
-      uses: docker/setup-buildx-action@v1
-      id: buildx
+    - name: Set up SSH
+      uses: webfactory/ssh-agent@v0.5.3
       with:
-        install: true
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-    - name: Login to DockerHub
-      uses: docker/login-action@v1
-      with:
-        username: sysread
-        password: ${{ secrets.DOCKER_HUB_TOKEN }}
-
-    - name: Build and push Docker image
-      uses: docker/build-push-action@v2
-      with:
-        context: .
-        push: true
-        platforms: linux/amd64,linux/arm64
-        tags: sysread/words_etc:latest
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Check out repository
-      uses: actions/checkout@v2
-
-    - name: Install SSH Client
-      run: sudo apt-get install openssh-client -y
-
-    - name: SSH into Raspberry Pi and deploy
+    - name: Deploy to Raspberry Pi
       run: |
-        mkdir -p ~/.ssh/
-        echo "${{ secrets.PI_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-        ssh -o StrictHostKeyChecking=no sysread@wordsetc.tplinkdns.com 'docker stop words_etc || true && docker rm words_etc || true && docker pull sysread/words_etc:latest && docker run -d --name words_etc sysread/words_etc:latest'
+        ssh sysread@wordsetc.tplinkdns.com "
+          set -e
+          cd /app/wordsetc
+          git pull
+          docker container stop words_etc || true
+          docker container rm words_etc || true
+          make build > build.log 2>&1
+          make daemon > daemon.log 2>&1
+        "
