@@ -10,16 +10,17 @@ defmodule WordsEtc.Combinations do
   def all(str) do
     str
     |> String.upcase()
-    |> sort_input()
+    |> normalize_input()
     |> expand_wildcards()
     |> TaskPool.flat_map(&all_subsets/1)
-    |> TaskPool.map(&upcase_sort/1)
-    |> Enum.map(&Enum.join(&1, ""))
     |> Enum.uniq_by(&String.upcase/1)
     |> Enum.sort(&upcase_lte/2)
   end
 
-  defp sort_input(input) do
+  # ----------------------------------------------------------------------------
+  # Normalizes input by sorting the string by character.
+  # ----------------------------------------------------------------------------
+  defp normalize_input(input) do
     input
     |> String.graphemes()
     |> Enum.sort()
@@ -43,12 +44,12 @@ defmodule WordsEtc.Combinations do
   #   [["A", "B", "a"], ["A", "B", "b"], ["A", "B", "c"], ...]
   # ----------------------------------------------------------------------------
   @spec expand_wildcards(String.t()) :: permutations()
-  def expand_wildcards(str) do
+  defp expand_wildcards(str) do
     if String.contains?(str, "?") do
       # For each alphabet letter, create a copy of the input string with the
       # first ? replaced by that letter.
       @alphabet
-      |> TaskPool.map(&String.replace(str, "?", &1, global: false))
+      |> Enum.map(&String.replace(str, "?", &1, global: false))
       |> TaskPool.flat_map(&expand_wildcards/1)
     else
       [str |> String.graphemes()]
@@ -60,7 +61,7 @@ defmodule WordsEtc.Combinations do
   # of those character lists.
   # ----------------------------------------------------------------------------
   @spec all_subsets(permutations()) :: permutations()
-  def all_subsets(list) do
+  defp all_subsets(list) do
     list
     |> Enum.reduce([[]], fn element, acc ->
       acc ++
@@ -68,11 +69,7 @@ defmodule WordsEtc.Combinations do
             do: [element | subset]
     end)
     |> Enum.reject(&Enum.empty?/1)
-    |> Enum.map(&upcase_sort/1)
-    |> Enum.uniq_by(fn list ->
-      list
-      |> Enum.map(&String.upcase/1)
-      |> Enum.join("")
-    end)
+    |> Enum.map(fn chars -> chars |> upcase_sort() |> Enum.join() end)
+    |> Enum.uniq_by(&String.upcase/1)
   end
 end
