@@ -11,7 +11,8 @@ sudo chown -Rf sysread "$(dirname "$DATABASE_PATH")"
 # Install dependencies
 sudo apt install -y libssl-dev automake autoconf libncurses5-dev
 
-# Install erlang and elixir
+# Install erlang and elixir with asdf
+source "$HOME/.asdf/asdf.sh"
 asdf install
 
 # Build our app release
