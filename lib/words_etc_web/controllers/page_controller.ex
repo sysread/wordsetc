@@ -34,10 +34,15 @@ defmodule WordsEtcWeb.PageController do
   end
 
   def validate(input) do
-    if input =~ ~r/^[a-zA-Z?]{1,10}$/i do
-      {:ok, String.upcase(input)}
-    else
-      {:invalid_input, "Expected between 1 and 10 letters or ? for wildcards"}
+    cond do
+      input |> String.graphemes() |> Enum.count(&(&1 == "?")) > 2 ->
+        {:invalid_input, "Up to 2 wildcards (?) are permitted"}
+
+      input =~ ~r/^[a-zA-Z?]{1,10}$/i ->
+        {:ok, String.upcase(input)}
+
+      true ->
+        {:invalid_input, "Expected between 1 and 10 letters or ? for wildcards"}
     end
   end
 end
