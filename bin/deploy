@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -eu -o pipefail
+set -eux -o pipefail
 
 export MIX_ENV=prod
 
@@ -17,7 +17,7 @@ asdf install
 # Build our app release
 mix local.hex --force
 mix deps.get
-mix release
+mix release --overwrite
 
 # Stop any existing instances of the app
 _build/prod/rel/words_etc/bin/words_etc stop || true
