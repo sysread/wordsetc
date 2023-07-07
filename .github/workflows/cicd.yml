@@ -53,7 +53,7 @@ jobs:
     - name: SSH into Raspberry Pi and deploy
       run: |
         mkdir -p ~/.ssh/
-        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        echo "${{ secrets.PI_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
         ssh -o StrictHostKeyChecking=no sysread@wordsetc.tplinkdns.com "
           set -e
