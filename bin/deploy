@@ -22,7 +22,7 @@ mix deps.get
 mix release --overwrite
 
 # Stop any existing instances of the app
-if [[ -n "$(sudo $APP pid)" ]]; then
+if [[ -n "$($APP pid)" ]]; then
   $APP stop || true
 fi
 
@@ -32,7 +32,7 @@ $APP daemon
 # Wait for the app to start
 sleep 5
 
-if [[ -z "$(sudo $APP pid)" ]]; then
+if [[ -z "$($APP pid)" ]]; then
   echo "Application failed to start"
   exit 1
 fi
