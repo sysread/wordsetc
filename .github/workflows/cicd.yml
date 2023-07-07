@@ -47,14 +47,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Set up SSH
-      uses: webfactory/ssh-agent@v0.5.3
-      with:
-        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+    - name: Install SSH Client
+      run: sudo apt-get install openssh-client -y
 
-    - name: Deploy to Raspberry Pi
+    - name: SSH into Raspberry Pi and deploy
       run: |
-        ssh sysread@wordsetc.tplinkdns.com "
+        mkdir -p ~/.ssh/
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh -o StrictHostKeyChecking=no sysread@wordsetc.tplinkdns.com "
           set -e
           cd /app/wordsetc
           git pull
