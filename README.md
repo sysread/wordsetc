@@ -7,13 +7,6 @@ Elixir. It allows users to input a set of letters and provides possible word
 solutions, each grouped by the number of letters, complete with definitions and
 Scrabble scores.
 
-## Prerequisites
-
-- Elixir 1.15.0
-- OTP 26.0.1
-- Node.js (for asset compilation)
-- Docker (optional)
-
 ## Setup
 
 Clone the repository:
@@ -28,14 +21,6 @@ To start the Words, Etc. application:
 mix ecto.setup
 mix phx.server
 ```
-
-Or using the `Makefile` and `docker`:
-
-```
-make PORT=4000
-```
-
-Now you can visit 'localhost:4000' from your browser.
 
 ## Usage
 
