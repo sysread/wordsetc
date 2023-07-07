@@ -79,4 +79,4 @@ jobs:
         mkdir -p ~/.ssh/
         echo "${{ secrets.PI_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
-        ssh -o StrictHostKeyChecking=no sysread@words_etc.tplinkdns.com 'docker stop words_etc || true && docker rm words_etc || true && docker pull sysread/words_etc:latest && docker run -d --name words_etc sysread/words_etc:latest'
+        ssh -o StrictHostKeyChecking=no sysread@wordsetc.tplinkdns.com 'docker stop words_etc || true && docker rm words_etc || true && docker pull sysread/words_etc:latest && docker run -d --name words_etc sysread/words_etc:latest'
