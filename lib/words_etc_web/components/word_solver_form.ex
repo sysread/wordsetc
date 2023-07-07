@@ -65,11 +65,6 @@ defmodule WordsEtcWeb.Components.WordSolverForm do
           $("#word-solver-form").removeClass('was-validated').addClass('needs-validation');
         });
 
-        // When form input is clicked, select all text in the input
-        $("#letters").on('click', function() {
-          $(this).select();
-        });
-
         $("#letters").on('input', function() {
           $(this).val($(this).val().toUpperCase());
           $("#word-solver-form").removeClass('was-validated').addClass('needs-validation');
