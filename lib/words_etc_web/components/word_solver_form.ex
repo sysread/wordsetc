@@ -10,7 +10,7 @@ defmodule WordsEtcWeb.Components.WordSolverForm do
         <input type="hidden" name="_csrf_token" value={Plug.CSRFProtection.get_csrf_token()} />
 
         <div class="input-group input-group-lg">
-          <label for="letters" class="input-group-text" id="basic-addon1">Letters</label>
+          <label for="letters" class="input-group-text d-sm-none">Letters</label>
 
           <input
             id="letters"
