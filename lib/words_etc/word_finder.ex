@@ -1,7 +1,7 @@
 defmodule WordsEtc.WordFinder do
   use GenServer
 
-  alias WordsEtc.Permutations
+  alias WordsEtc.Combinations
   alias WordsEtc.Scoring
 
   @type state :: %{
@@ -122,7 +122,7 @@ defmodule WordsEtc.WordFinder do
   @spec get_words(String.t(), state()) :: [String.t()]
   defp get_words(letters, state) do
     letters
-    |> Permutations.all()
+    |> Combinations.all()
     |> Enum.flat_map(&Map.get(state.find, String.upcase(&1), []))
     |> Enum.map(&lowercase_matches(letters, &1))
     |> Enum.sort()

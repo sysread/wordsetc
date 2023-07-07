@@ -1,4 +1,4 @@
-defmodule WordsEtc.Permutations do
+defmodule WordsEtc.Combinations do
   alias WordsEtc.TaskPool
 
   @type letters :: [String.grapheme()]
@@ -10,12 +10,20 @@ defmodule WordsEtc.Permutations do
   def all(str) do
     str
     |> String.upcase()
+    |> sort_input()
     |> expand_wildcards()
     |> TaskPool.flat_map(&all_subsets/1)
     |> TaskPool.map(&upcase_sort/1)
     |> Enum.map(&Enum.join(&1, ""))
     |> Enum.uniq_by(&String.upcase/1)
     |> Enum.sort(&upcase_lte/2)
+  end
+
+  defp sort_input(input) do
+    input
+    |> String.graphemes()
+    |> Enum.sort()
+    |> Enum.join()
   end
 
   # ----------------------------------------------------------------------------
@@ -35,7 +43,7 @@ defmodule WordsEtc.Permutations do
   #   [["A", "B", "a"], ["A", "B", "b"], ["A", "B", "c"], ...]
   # ----------------------------------------------------------------------------
   @spec expand_wildcards(String.t()) :: permutations()
-  defp expand_wildcards(str) do
+  def expand_wildcards(str) do
     if String.contains?(str, "?") do
       # For each alphabet letter, create a copy of the input string with the
       # first ? replaced by that letter.
@@ -52,14 +60,19 @@ defmodule WordsEtc.Permutations do
   # of those character lists.
   # ----------------------------------------------------------------------------
   @spec all_subsets(permutations()) :: permutations()
-  defp all_subsets(list) do
+  def all_subsets(list) do
     list
     |> Enum.reduce([[]], fn element, acc ->
       acc ++
-        for subset <- acc do
-          [element | subset]
-        end
+        for subset <- acc,
+            do: [element | subset]
     end)
     |> Enum.reject(&Enum.empty?/1)
+    |> Enum.map(&upcase_sort/1)
+    |> Enum.uniq_by(fn list ->
+      list
+      |> Enum.map(&String.upcase/1)
+      |> Enum.join("")
+    end)
   end
 end
