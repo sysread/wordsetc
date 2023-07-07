@@ -4,13 +4,13 @@ defmodule WordsEtcWeb.Components.WordSolverForm do
   def render(assigns) do
     ~H"""
     <div class="container py-4">
-      <h3>Word solver</h3>
+      <h3>Word Solver</h3>
 
-      <form id="word-solver-form" action={@action} method="POST" class="row g-3" novalidate>
+      <form id="word-solver-form" action={@action} method="POST" novalidate>
         <input type="hidden" name="_csrf_token" value={Plug.CSRFProtection.get_csrf_token()} />
 
-        <div class="col-6 position-relative">
-          <label for="letters" class="form-label">Letters</label>
+        <div class="input-group input-group-lg">
+          <label for="letters" class="input-group-text" id="basic-addon1">Letters</label>
 
           <input
             id="letters"
@@ -27,28 +27,23 @@ defmodule WordsEtcWeb.Components.WordSolverForm do
             autocapitalize="off"
           />
 
-          <button
-            id="clear-letters"
-            type="button"
-            class="btn btn-primary rounded-pill position-absolute top-50 end-0 translate-middle-y"
-          >
+          <button id="clear-letters" type="button" class="btn btn-outline-secondary">
             X
           </button>
+          <button id="submit-button" type="submit" class="btn btn-outline-primary">
+            Solve!
+          </button>
+        </div>
 
-          <%= if @error do %>
-            <div class="validation-error invalid-feedback">
-              <%= @error %>
-            </div>
-          <% end %>
+        <div class="invalid-feedback">
+          Please enter 1-10 letters or ? for a wildcard tile.
+        </div>
 
-          <div class="invalid-feedback">
-            Please enter 1-10 letters or ? for a wildcard tile.
+        <%= if @error do %>
+          <div class="validation-error invalid-feedback">
+            <%= @error %>
           </div>
-        </div>
-
-        <div class="col-4 d-flex align-items-end">
-          <button id="submit-button" type="submit" class="btn btn-primary">Solve!</button>
-        </div>
+        <% end %>
       </form>
     </div>
 
