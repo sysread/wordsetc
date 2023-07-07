@@ -57,10 +57,7 @@ jobs:
         chmod 600 ~/.ssh/id_rsa
         ssh -o StrictHostKeyChecking=no sysread@wordsetc.tplinkdns.com "
           set -e
-          cd /app/wordsetc
+          cd apps/wordsetc
           git pull
-          docker container stop words_etc || true
-          docker container rm words_etc || true
-          make build > build.log 2>&1
-          make daemon > daemon.log 2>&1
+          bin/deploy
         "

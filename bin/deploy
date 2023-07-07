@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+set -eu -o pipefail
+
+export MIX_ENV=prod
+
+# Ensure our database path exists
+sudo mkdir -p "$(dirname "$DATABASE_PATH")"
+sudo chown -Rf sysread "$(dirname "$DATABASE_PATH")"
+
+# Install dependencies
+sudo apt install -y libssl-dev automake autoconf libncurses5-dev
+
+# Install erlang and elixir
+asdf install
+
+# Build our app release
+mix local.hex --force
+mix deps.get
+mix release
+
+# Stop any existing instances of the app
+_build/prod/rel/words_etc/bin/words_etc stop || true
+
+# Start our app
+_build/prod/rel/words_etc/bin/words_etc start > /deploy.log 2>&1
