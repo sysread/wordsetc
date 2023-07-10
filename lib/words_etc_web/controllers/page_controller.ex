@@ -13,7 +13,7 @@ defmodule WordsEtcWeb.PageController do
     letters = Map.get(params, "letters", "")
 
     with {:ok, input} <- validate(letters),
-         {:ok, words} <- WordFinder.solve(input) do
+         {:ok, words} <- WordFinder.solve(input, get_sort(params)) do
       conn
       |> assign(:error, nil)
       |> assign(:solutions, words)
@@ -43,6 +43,14 @@ defmodule WordsEtcWeb.PageController do
 
       true ->
         {:invalid_input, "Expected between 1 and 10 letters or ? for wildcards"}
+    end
+  end
+
+  defp get_sort(params) do
+    case Map.get(params, "sort", "") do
+      "score" -> :score
+      "alpha" -> :alpha
+      _ -> :score
     end
   end
 end

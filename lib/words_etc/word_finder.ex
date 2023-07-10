@@ -9,6 +9,10 @@ defmodule WordsEtc.WordFinder do
           find: %{String.t() => [String.t()]}
         }
 
+  @type sort_by ::
+          :score
+          | :alpha
+
   # ----------------------------------------------------------------------------
   # Client
   # ----------------------------------------------------------------------------
@@ -16,8 +20,8 @@ defmodule WordsEtc.WordFinder do
     GenServer.start_link(__MODULE__, nil, name: __MODULE__)
   end
 
-  def solve(letters) do
-    GenServer.call(__MODULE__, {:solve, letters})
+  def solve(letters, sort \\ :score) do
+    GenServer.call(__MODULE__, {:solve, letters, sort})
   end
 
   # ----------------------------------------------------------------------------
@@ -37,8 +41,8 @@ defmodule WordsEtc.WordFinder do
   end
 
   @impl true
-  def handle_call({:solve, letters}, _from, state) when is_binary(letters) do
-    result = do_solve(letters, state)
+  def handle_call({:solve, letters, sort_by}, _from, state) when is_binary(letters) do
+    result = do_solve(letters, sort_by, state)
     {:reply, {:ok, result}, state}
   end
 
@@ -98,13 +102,13 @@ defmodule WordsEtc.WordFinder do
   # each word. Finally, we group the words by length and sort the words in each
   # group by score.
   # ----------------------------------------------------------------------------
-  @spec do_solve(String.t(), state()) :: list()
-  defp do_solve(letters, state) do
+  @spec do_solve(String.t(), state(), sort_by()) :: list()
+  defp do_solve(letters, sort_by, state) do
     letters
     |> get_words(state)
     |> get_word_info(state)
     |> group_by_length()
-    |> sort_grouped_words()
+    |> sort_grouped_words(sort_by)
     |> sort_word_groups()
   end
 
@@ -120,14 +124,20 @@ defmodule WordsEtc.WordFinder do
     Enum.group_by(words, fn {word, _, _} -> String.length(word) end)
   end
 
-  defp sort_grouped_words(groups) do
+  defp sort_grouped_words(groups, :score) do
     Enum.map(groups, fn {key, value} ->
-      {key, Enum.sort_by(value, fn {_, score, _} -> score end, &>=/2)}
+      {key, Enum.sort_by(value, &elem(&1, 1), :desc)}
+    end)
+  end
+
+  defp sort_grouped_words(groups, :alpha) do
+    Enum.map(groups, fn {key, value} ->
+      {key, Enum.sort_by(value, &String.downcase(elem(&1, 0)), :asc)}
     end)
   end
 
   defp sort_word_groups(groups) do
-    Enum.sort_by(groups, fn {count, _words} -> count end, &>=/2)
+    Enum.sort_by(groups, fn {count, _words} -> count end, :desc)
   end
 
   # ----------------------------------------------------------------------------
