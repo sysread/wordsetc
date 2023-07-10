@@ -109,8 +109,7 @@ defmodule WordsEtc.WordFinder do
   end
 
   defp get_word_info(words, state) do
-    words
-    |> Enum.map(fn word ->
+    Enum.map(words, fn word ->
       score = Scoring.calculate(word)
       definition = word |> String.upcase() |> get_definition(state)
       {word, score, definition}
@@ -118,18 +117,17 @@ defmodule WordsEtc.WordFinder do
   end
 
   defp group_by_length(words) do
-    words |> Enum.group_by(fn {word, _, _} -> String.length(word) end)
+    Enum.group_by(words, fn {word, _, _} -> String.length(word) end)
   end
 
   defp sort_grouped_words(groups) do
-    groups
-    |> Enum.map(fn {key, value} ->
+    Enum.map(groups, fn {key, value} ->
       {key, Enum.sort_by(value, fn {_, score, _} -> score end, &>=/2)}
     end)
   end
 
   defp sort_word_groups(groups) do
-    groups |> Enum.sort_by(fn {count, _words} -> count end, &>=/2)
+    Enum.sort_by(groups, fn {count, _words} -> count end, &>=/2)
   end
 
   # ----------------------------------------------------------------------------
@@ -204,7 +202,7 @@ defmodule WordsEtc.WordFinder do
   # ----------------------------------------------------------------------------
   # The definition is a string that may contain special formatting. We want to
   # parse the definition and return a string that can be printed to the user.
-  # 
+  #
   # This is done at runtime because it will follow links to other words in the
   # dictionary, which are incomplete at compile time.
   # ----------------------------------------------------------------------------
