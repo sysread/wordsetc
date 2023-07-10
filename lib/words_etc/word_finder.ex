@@ -80,27 +80,6 @@ defmodule WordsEtc.WordFinder do
   end
 
   # ----------------------------------------------------------------------------
-  # The main solve function. We start by getting all the words that can be made
-  # from the given letters. Then we score each word, and get the definition for
-  # each word. Finally, we group the words by length and sort the words in each
-  # group by score.
-  # ----------------------------------------------------------------------------
-  @spec do_solve(String.t(), state()) :: list()
-  defp do_solve(letters, state) do
-    get_words(letters, state)
-    |> Enum.map(fn word ->
-      score = Scoring.calculate(word)
-      definition = word |> String.upcase() |> get_definition(state)
-      {word, score, definition}
-    end)
-    |> Enum.group_by(fn {word, _score, _definition} -> String.length(word) end)
-    |> Enum.map(fn {key, value} ->
-      {key, Enum.sort_by(value, fn {_word, score, _definition} -> score end, &>=/2)}
-    end)
-    |> Enum.sort_by(fn {count, _words} -> count end, &>=/2)
-  end
-
-  # ----------------------------------------------------------------------------
   # Returns a new string with the upper-cased characters from the original
   # string sorted alphabetically. This is used to build the lookup table.
   # ----------------------------------------------------------------------------
@@ -111,6 +90,46 @@ defmodule WordsEtc.WordFinder do
     |> String.graphemes()
     |> Enum.sort()
     |> Enum.join()
+  end
+
+  # ----------------------------------------------------------------------------
+  # The main solve function. We start by getting all the words that can be made
+  # from the given letters. Then we score each word, and get the definition for
+  # each word. Finally, we group the words by length and sort the words in each
+  # group by score.
+  # ----------------------------------------------------------------------------
+  @spec do_solve(String.t(), state()) :: list()
+  defp do_solve(letters, state) do
+    letters
+    |> get_words(state)
+    |> get_word_info(state)
+    |> group_by_length()
+    |> sort_grouped_words()
+    |> sort_word_groups()
+  end
+
+  defp get_word_info(words, state) do
+    words
+    |> Enum.map(fn word ->
+      score = Scoring.calculate(word)
+      definition = word |> String.upcase() |> get_definition(state)
+      {word, score, definition}
+    end)
+  end
+
+  defp group_by_length(words) do
+    words |> Enum.group_by(fn {word, _score, _definition} -> String.length(word) end)
+  end
+
+  defp sort_grouped_words(groups) do
+    groups
+    |> Enum.map(fn {key, value} ->
+      {key, Enum.sort_by(value, fn {_word, score, _definition} -> score end, &>=/2)}
+    end)
+  end
+
+  defp sort_word_groups(groups) do
+    groups |> Enum.sort_by(fn {count, _words} -> count end, &>=/2)
   end
 
   # ----------------------------------------------------------------------------
