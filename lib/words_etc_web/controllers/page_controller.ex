@@ -11,9 +11,10 @@ defmodule WordsEtcWeb.PageController do
 
   def solve(conn, params) do
     letters = Map.get(params, "letters", "")
+    sort = get_sort(params)
 
     with {:ok, input} <- validate(letters),
-         {:ok, words} <- WordFinder.solve(input, get_sort(params)) do
+         {:ok, words} <- WordFinder.solve(input, sort) do
       conn
       |> assign(:error, nil)
       |> assign(:solutions, words)
@@ -29,6 +30,7 @@ defmodule WordsEtcWeb.PageController do
         |> assign(:solutions, [])
     end
     |> assign(:letters, letters)
+    |> assign(:sort, sort)
     |> assign(:page_title, "Solutions")
     |> render(:solve, layout: false)
   end

@@ -16,7 +16,7 @@ defmodule WordsEtcWeb.Components.WordSolverForm do
             id="letters"
             type="text"
             name="letters"
-            class="form-control text-uppercase"
+            class="form-control text-uppercase w-50"
             value={@letters}
             required
             pattern="[A-Z?]*"
@@ -30,6 +30,12 @@ defmodule WordsEtcWeb.Components.WordSolverForm do
           <button id="clear-letters" type="button" class="btn btn-outline-secondary">
             X
           </button>
+
+          <select id="sort" name="sort" class="form-select">
+            <option value="score" selected>sort by score</option>
+            <option value="alpha">sort by word</option>
+          </select>
+
           <button id="submit-button" type="submit" class="btn btn-outline-primary">
             Solve!
           </button>
