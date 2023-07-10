@@ -32,8 +32,8 @@ defmodule WordsEtcWeb.Components.WordSolverForm do
           </button>
 
           <select id="sort" name="sort" class="form-select">
-            <option value="score" selected>sort by score</option>
-            <option value="alpha">sort by word</option>
+            <option value="score" selected={@sort == :score}>sort by score</option>
+            <option value="alpha" selected={@sort == :alpha}>sort by word</option>
           </select>
 
           <button id="submit-button" type="submit" class="btn btn-outline-primary">
