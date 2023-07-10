@@ -42,3 +42,4 @@ npm-debug.log
 tags
 tmp
 .env
+.DS_Store
