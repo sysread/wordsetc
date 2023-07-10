@@ -118,13 +118,13 @@ defmodule WordsEtc.WordFinder do
   end
 
   defp group_by_length(words) do
-    words |> Enum.group_by(fn {word, _score, _definition} -> String.length(word) end)
+    words |> Enum.group_by(fn {word, _, _} -> String.length(word) end)
   end
 
   defp sort_grouped_words(groups) do
     groups
     |> Enum.map(fn {key, value} ->
-      {key, Enum.sort_by(value, fn {_word, score, _definition} -> score end, &>=/2)}
+      {key, Enum.sort_by(value, fn {_, score, _} -> score end, &>=/2)}
     end)
   end
 
