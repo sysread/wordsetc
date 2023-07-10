@@ -228,14 +228,21 @@ defmodule WordsEtc.WordFinder do
     Regex.split(~r/[\s\b\W]/, definition, trim: true, include_captures: true)
     |> Enum.reject(&(&1 == " "))
     |> case do
-      # <ad=n> [n]
-      ["<", word, "=", _, "[", _, "]"] -> get_definition(word, state)
+      # <aji=n> [n] (2018)
+      ["<", word, "=", _, ">", "[", _, "]", "(", _, ")"] ->
+        get_definition(word, state)
+
       # <advertisement=n> [n]
-      ["<", word, "=", _, ">", "[", _, "]"] -> get_definition(word, state)
+      ["<", word, "=", _, ">", "[", _, "]"] ->
+        get_definition(word, state)
+
       # [n ADVERTISEMENTS]
-      ["[", _, word, "]"] -> word
+      ["[", _, word, "]"] ->
+        word
+
       # Otherwise, just return the cleaned up definition
-      _ -> definition
+      _ ->
+        definition
     end
   end
 end
