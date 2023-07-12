@@ -20,8 +20,12 @@ defmodule WordsEtc.WordFinder do
     GenServer.start_link(__MODULE__, nil, name: __MODULE__)
   end
 
-  def solve(letters, sort \\ :score) do
-    GenServer.call(__MODULE__, {:solve, letters, sort})
+  def solve(letters), do: solve(letters, "", :score)
+  def solve(letters, :score), do: solve(letters, "", :score)
+  def solve(letters, :alpha), do: solve(letters, "", :alpha)
+
+  def solve(letters, board_state, sort) do
+    GenServer.call(__MODULE__, {:solve, letters, board_state, sort})
   end
 
   # ----------------------------------------------------------------------------
@@ -41,8 +45,9 @@ defmodule WordsEtc.WordFinder do
   end
 
   @impl true
-  def handle_call({:solve, letters, sort_by}, _from, state) when is_binary(letters) do
-    result = do_solve(letters, sort_by, state)
+  def handle_call({:solve, letters, board_state, sort_by}, _from, state)
+      when is_binary(letters) do
+    result = do_solve(letters, board_state, sort_by, state)
     {:reply, {:ok, result}, state}
   end
 
@@ -102,10 +107,10 @@ defmodule WordsEtc.WordFinder do
   # each word. Finally, we group the words by length and sort the words in each
   # group by score.
   # ----------------------------------------------------------------------------
-  @spec do_solve(String.t(), state(), sort_by()) :: list()
-  defp do_solve(letters, sort_by, state) do
+  @spec do_solve(String.t(), String.t(), sort_by(), state()) :: list()
+  defp do_solve(letters, board_state, sort_by, state) do
     letters
-    |> get_words(state)
+    |> get_words(board_state, state)
     |> get_word_info(state)
     |> group_by_length()
     |> sort_grouped_words(sort_by)
@@ -146,14 +151,27 @@ defmodule WordsEtc.WordFinder do
   # characters (?) to all possible letters, and then looking up each permutation
   # in the lookup table.
   # ----------------------------------------------------------------------------
-  @spec get_words(String.t(), state()) :: [String.t()]
-  defp get_words(letters, state) do
-    letters
+  @spec get_words(String.t(), String.t(), state()) :: [String.t()]
+  defp get_words(letters, board_state, state) do
+    filter_pattern = generate_filter_pattern(board_state)
+    extra_letters = get_filter_pattern_letters(board_state)
+    input = letters <> extra_letters
+
+    input
     |> Combinations.all()
     |> Enum.flat_map(&Map.get(state.find, String.upcase(&1), []))
-    |> Enum.map(&lowercase_matches(letters, &1))
+    |> Enum.filter(&String.match?(&1, ~r/#{filter_pattern}/))
+    |> Enum.map(&lowercase_matches(input, &1))
     |> Enum.sort()
     |> Enum.uniq()
+  end
+
+  defp generate_filter_pattern(board_state) do
+    Regex.replace(~r/(\d+)/, String.upcase(board_state), ".{0,\\1}")
+  end
+
+  defp get_filter_pattern_letters(board_state) do
+    Regex.replace(~r/\d/, String.upcase(board_state), "")
   end
 
   # ----------------------------------------------------------------------------

@@ -14,7 +14,8 @@ defmodule WordsEtcWeb.PageController do
     filter = Map.get(params, "filter", "")
     sort = get_sort(params)
 
-    with {:ok, input} <- validate(letters),
+    with {:ok, input} <- validate_letters(letters),
+         {:ok, _filter} <- validate_filter(filter),
          {:ok, words} <- WordFinder.solve(input, sort) do
       conn
       |> assign(:error, nil)
@@ -37,7 +38,7 @@ defmodule WordsEtcWeb.PageController do
     |> render(:solve, layout: false)
   end
 
-  def validate(input) do
+  def validate_letters(input) do
     cond do
       input |> String.graphemes() |> Enum.count(&(&1 == "?")) > 2 ->
         {:invalid_input, "Up to 2 wildcards (?) are permitted"}
@@ -47,6 +48,14 @@ defmodule WordsEtcWeb.PageController do
 
       true ->
         {:invalid_input, "Expected between 1 and 10 letters or ? for wildcards"}
+    end
+  end
+
+  def validate_filter(input) do
+    if input =~ ~r/^[A-Z0-9]{0,5}$/ do
+      {:ok, String.upcase(input)}
+    else
+      {:invalid_input, "Expected up to 5 letters or numbers"}
     end
   end
 

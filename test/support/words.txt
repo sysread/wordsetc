@@ -5,3 +5,7 @@ BB like AA but with Bs
 CA fnord fnord fnord
 CAB a taxi i guess
 CC like BB but with Cs
+ABDC matches both letters and pattern (for matching abc + 2d1)
+ACDB matches both letters and pattern (for matching abc + 2d1)
+ABDCC matches letters but not pattern (for matching abc + 2d1)
+ACDC matches pattern but not letters (for matching abc + 2d1)

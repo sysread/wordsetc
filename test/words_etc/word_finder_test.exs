@@ -75,5 +75,17 @@ defmodule WordsEtc.WordFinderTest do
               ]} =
                WordFinder.solve("a?c", :alpha)
     end
+
+    test "positional filter" do
+      assert {:ok,
+              [
+                {4,
+                 [
+                   {"ABDC", 9, "matches both letters and pattern (for matching abc + 2d1)"},
+                   {"ACDB", 9, "matches both letters and pattern (for matching abc + 2d1)"}
+                 ]}
+              ]} =
+               WordFinder.solve("abc", "2d1", :alpha)
+    end
   end
 end
