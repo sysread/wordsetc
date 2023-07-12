@@ -14,10 +14,10 @@ defmodule WordsEtcWeb.Components.WordSolverForm do
 
           <input
             id="letters"
-            type="text"
             name="letters"
-            class="form-control text-uppercase w-50"
+            type="text"
             value={@letters}
+            class="form-control text-uppercase w-50"
             required
             pattern="[A-Z?]*"
             minlength="1"
@@ -36,7 +36,59 @@ defmodule WordsEtcWeb.Components.WordSolverForm do
           </button>
         </div>
 
-        <div class="input-group input-group-md">
+        <div>
+          <div class="input-group mb-3">
+            <label for="filter" class="input-group-text">
+              Positional Filter
+            </label>
+
+            <input
+              id="filter"
+              name="filter"
+              type="text"
+              value={@filter}
+              class="form-control text-uppercase"
+              pattern="[A-Z0-9]*"
+              maxlength="5"
+              autocomplete="off"
+              autocorrect="off"
+              autocapitalize="off"
+            />
+
+            <button
+              id="filter-instructions-button"
+              type="button"
+              class="btn btn-outline-secondary"
+              data-bs-toggle="collapse"
+              href="#filter-instructions"
+            >
+              ?
+            </button>
+          </div>
+
+          <div id="filter-instructions" class="card collapse mb-3">
+            <div class="card-header">
+              Instructions
+            </div>
+            <div class="card-body">
+              Specify an existing tile you wish to play on along with the number of empty tiles on either side of it.
+              <table class="table">
+                <tbody>
+                  <tr>
+                    <td><code>3M4</code></td>
+                    <td>3 tiles, M, 4 tiles</td>
+                  </tr>
+                  <tr>
+                    <td><code>2M3ED</code></td>
+                    <td>2 tiles, M, 3 tiles, E, D</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="input-group">
           <label for="sort" class="input-group-text">Sort</label>
           <select id="sort" name="sort" class="form-select">
             <option value="score" selected={@sort == :score}>by score</option>
@@ -69,7 +121,8 @@ defmodule WordsEtcWeb.Components.WordSolverForm do
           $("#word-solver-form").removeClass('was-validated').addClass('needs-validation');
         });
 
-        $("#letters").on('input', function() {
+        // Convert letters to uppercase
+        $("#letters, #filter").on('input', function() {
           $(this).val($(this).val().toUpperCase());
           $("#word-solver-form").removeClass('was-validated').addClass('needs-validation');
         });
