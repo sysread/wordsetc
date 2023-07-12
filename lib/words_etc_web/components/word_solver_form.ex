@@ -9,7 +9,7 @@ defmodule WordsEtcWeb.Components.WordSolverForm do
       <form id="word-solver-form" action={@action} method="POST" novalidate>
         <input type="hidden" name="_csrf_token" value={Plug.CSRFProtection.get_csrf_token()} />
 
-        <div class="input-group input-group-lg">
+        <div class="input-group input-group-lg mb-3">
           <label for="letters" class="input-group-text d-none d-md-block">Letters</label>
 
           <input
@@ -31,14 +31,17 @@ defmodule WordsEtcWeb.Components.WordSolverForm do
             X
           </button>
 
-          <select id="sort" name="sort" class="form-select">
-            <option value="score" selected={@sort == :score}>sort by score</option>
-            <option value="alpha" selected={@sort == :alpha}>sort by word</option>
-          </select>
-
           <button id="submit-button" type="submit" class="btn btn-outline-primary">
             Solve!
           </button>
+        </div>
+
+        <div class="input-group input-group-md">
+          <label for="sort" class="input-group-text">Sort</label>
+          <select id="sort" name="sort" class="form-select">
+            <option value="score" selected={@sort == :score}>by score</option>
+            <option value="alpha" selected={@sort == :alpha}>by word</option>
+          </select>
         </div>
 
         <div class="invalid-feedback">
