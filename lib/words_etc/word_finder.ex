@@ -167,7 +167,11 @@ defmodule WordsEtc.WordFinder do
   end
 
   defp generate_filter_pattern(board_state) do
-    "^" <> Regex.replace(~r/(\d+)/, String.upcase(board_state), ".{0,\\1}") <> "$"
+    if board_state == "" do
+      "."
+    else
+      "^" <> Regex.replace(~r/(\d+)/, String.upcase(board_state), ".{0,\\1}") <> "$"
+    end
   end
 
   defp get_filter_pattern_letters(board_state) do
