@@ -34,7 +34,7 @@ fi
 # ------------------------------------------------------------------------------
 # DEBUGGING
 # ------------------------------------------------------------------------------
-#if [[ -n "${DEBUG:-}" ]]; then
+if [[ -n "${DEBUG:-}" ]]; then
     echo "> DEBUG MODE ENABLED"
     echo "> Starting app in foreground"
 
@@ -52,7 +52,7 @@ fi
       echo "Errors found during start. Check app.log for details."
       exit 1
     fi
-#fi
+fi
 
 # Now attempt to start the app as a daemon
 echo "> Starting app as daemon"
