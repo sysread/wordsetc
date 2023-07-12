@@ -86,6 +86,13 @@ defmodule WordsEtc.WordFinderTest do
                  ]}
               ]} =
                WordFinder.solve("abc", "2d1", :alpha)
+
+      assert {:ok,
+              [
+                {3, [{"BAC", 7, "short for a lounge singer"}, {"CAB", 7, "a taxi i guess"}]},
+                {2, [{"BA", 4, "yadda yadda yadda"}, {"CA", 4, "fnord fnord fnord"}]}
+              ]} =
+               WordFinder.solve("abc", "", :alpha)
     end
   end
 end
