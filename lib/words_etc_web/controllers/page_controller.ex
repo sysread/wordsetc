@@ -15,8 +15,8 @@ defmodule WordsEtcWeb.PageController do
     sort = get_sort(params)
 
     with {:ok, input} <- validate_letters(letters),
-         {:ok, _filter} <- validate_filter(filter),
-         {:ok, words} <- WordFinder.solve(input, sort) do
+         {:ok, filter} <- validate_filter(filter),
+         {:ok, words} <- WordFinder.solve(input, filter, sort) do
       conn
       |> assign(:error, nil)
       |> assign(:solutions, words)
