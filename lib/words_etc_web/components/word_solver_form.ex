@@ -55,6 +55,10 @@ defmodule WordsEtcWeb.Components.WordSolverForm do
               autocapitalize="off"
             />
 
+            <button id="clear-filter" type="button" class="btn btn-outline-secondary">
+              X
+            </button>
+
             <button
               id="filter-instructions-button"
               type="button"
@@ -118,6 +122,13 @@ defmodule WordsEtcWeb.Components.WordSolverForm do
         $("#clear-letters").on('click', function() {
           $("#letters").val('');
           $("#letters").focus();
+          $("#word-solver-form").removeClass('was-validated').addClass('needs-validation');
+        });
+
+        // Clear filter form input when X is clicked
+        $("#clear-filter").on('click', function() {
+          $("#filter").val('');
+          $("#filter").focus();
           $("#word-solver-form").removeClass('was-validated').addClass('needs-validation');
         });
 
