@@ -21,7 +21,13 @@ defmodule WordsEtcWeb.Endpoint do
     at: "/",
     from: :words_etc,
     gzip: false,
-    only: WordsEtcWeb.static_paths() ++ ["favicon.png"]
+    only:
+      WordsEtcWeb.static_paths() ++
+        [
+          "favicon.ico",
+          "manifest.json",
+          "service-worker.js"
+        ]
 
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.

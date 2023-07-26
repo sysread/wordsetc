@@ -1,0 +1,20 @@
+{
+  "name": "Words, etc.",
+  "short_name": "wordsetc",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#fff",
+  "description": "jober's personal scrabble tile solver",
+  "icons": [
+    {
+      "src": "/images/words-etc-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/images/words-etc-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}
