@@ -6,7 +6,7 @@ config :logger, level: :info
 # Runtime production configuration, including reading
 # of environment variables, is done on config/runtime.exs.
 config :words_etc, WordsEtcWeb.Endpoint,
-  http: [:inet6, port: 4000],
+  http: [:inet6, port: 4001],
   url: [host: "wordsetc.tplinkdns.com", port: 443],
   force_ssl: [rewrite_on: [:x_forwarded_proto]],
   cache_static_manifest: "priv/static/manifest.json",
