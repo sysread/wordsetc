@@ -1,6 +1,12 @@
 defmodule WordsEtcWeb.Router do
   use WordsEtcWeb, :router
 
+  scope "/.well-known/acme-challenge", WordsEtcWeb do
+    pipe_through :browser
+
+    get "/*path", AcmeChallengeController, :index
+  end
+
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
