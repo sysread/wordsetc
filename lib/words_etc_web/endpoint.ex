@@ -25,7 +25,7 @@ defmodule WordsEtcWeb.Endpoint do
       WordsEtcWeb.static_paths() ++
         [
           "favicon.ico",
-          "manifest.json",
+          "pwa-manifest.json",
           "service-worker.js"
         ]
 
