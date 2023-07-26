@@ -16,6 +16,5 @@ config :words_etc, WordsEtcWeb.Endpoint,
     port: 4000,
     cipher_suite: :strong,
     certfile: "/etc/letsencrypt/live/wordsetc.tplinkdns.com/fullchain.pem",
-    keyfile: "/etc/letsencrypt/live/wordsetc.tplinkdns.com/privkey.pem",
-    transport_options: [socket_opts: [:reuseaddr, :inet6]]
+    keyfile: "/etc/letsencrypt/live/wordsetc.tplinkdns.com/privkey.pem"
   ]
