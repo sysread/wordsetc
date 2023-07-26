@@ -2,7 +2,7 @@
   "name": "Words, etc.",
   "short_name": "wordsetc",
   "start_url": ".",
-  "display": "standalone",
+  "display": "fullscreen",
   "background_color": "#fff",
   "description": "jober's personal scrabble tile solver",
   "icons": [
