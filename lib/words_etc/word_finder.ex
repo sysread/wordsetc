@@ -153,7 +153,7 @@ defmodule WordsEtc.WordFinder do
   # ----------------------------------------------------------------------------
   @spec get_words(String.t(), String.t(), state()) :: [String.t()]
   defp get_words(letters, board_state, state) do
-    filter_pattern = generate_filter_pattern(board_state)
+    filter_pattern = generate_filter_pattern(board_state, letters)
     extra_letters = get_filter_pattern_letters(board_state)
     input = letters <> extra_letters
 
@@ -166,11 +166,17 @@ defmodule WordsEtc.WordFinder do
     |> Enum.uniq()
   end
 
-  defp generate_filter_pattern(board_state) do
-    if board_state == "" do
-      "."
-    else
-      "^" <> Regex.replace(~r/(\d+)/, String.upcase(board_state), ".{0,\\1}") <> "$"
+  defp generate_filter_pattern(board_state, letters) do
+    cond do
+      board_state == "" ->
+        "."
+
+      String.length(board_state) == 1 ->
+        count = String.length(letters)
+        "^.{0,#{count}}#{String.upcase(board_state)}.{0,#{count}}$"
+
+      true ->
+        "^#{Regex.replace(~r/(\d+)/, String.upcase(board_state), ".{0,\\1}")}$"
     end
   end
 

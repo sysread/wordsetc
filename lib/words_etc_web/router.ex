@@ -26,9 +26,4 @@ defmodule WordsEtcWeb.Router do
     get "/", PageController, :home
     post "/", PageController, :solve
   end
-
-  # Other scopes may use custom stacks.
-  # scope "/api", WordsEtcWeb do
-  #   pipe_through :api
-  # end
 end
