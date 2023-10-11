@@ -16,6 +16,7 @@ sudo apt install -y libssl-dev automake autoconf libncurses5-dev
 
 # Install erlang and elixir with asdf
 echo "> Installing erlang and elixir using asdf"
+# shellcheck disable=SC1091
 source "$HOME/.asdf/asdf.sh"
 asdf install
 
@@ -30,38 +31,38 @@ echo "> Stopping running instances of the app"
 $APP stop || true
 
 while [[ -n "$($APP pid)" ]]; do
-    echo "  > Waiting for app to stop"
+  echo "  > Waiting for app to stop"
 done
 
 # ------------------------------------------------------------------------------
 # DEBUGGING
 # ------------------------------------------------------------------------------
 if [[ -n "${DEBUG:-}" ]]; then
-    echo "> DEBUG MODE ENABLED"
+  echo "> DEBUG MODE ENABLED"
 
-    # Start our app in the foreground and log output
-    echo "  > Starting app in foreground"
-    $APP start > app.log 2>&1 &
+  # Start our app in the foreground and log output
+  echo "  > Starting app in foreground"
+  $APP start > app.log 2>&1 &
 
-    # Allow the application to run for a few seconds
-    echo "  > Waiting for app to start"
-    sleep 5
+  # Allow the application to run for a few seconds
+  echo "  > Waiting for app to start"
+  sleep 5
 
-    # Then stop the application
-    echo "  > Stopping app"
-    $APP stop || true
+  # Then stop the application
+  echo "  > Stopping app"
+  $APP stop || true
 
-    while [[ -n "$($APP pid)" ]]; do
-        echo "  > Waiting for app to stop"
-    done
+  while [[ -n "$($APP pid)" ]]; do
+    echo "  > Waiting for app to stop"
+  done
 
-    # Check the log for errors
-    if grep -q "error" app.log; then
-        echo "  > Errors found during start. Check app.log for details."
-        exit 1
-    else
-        echo "  > No errors detected during start"
-    fi
+  # Check the log for errors
+  if grep -q "error" app.log; then
+    echo "  > Errors found during start. Check app.log for details."
+    exit 1
+  else
+    echo "  > No errors detected during start"
+  fi
 fi
 
 # Now attempt to start the app as a daemon
@@ -75,9 +76,9 @@ sleep 5
 # Check if the app is running
 echo "> Checking if app is running"
 if [[ -z "$($APP pid)" ]]; then
-    echo "  > Application failed to start"
-    exit 1
+  echo "  > Application failed to start"
+  exit 1
 else
-    echo "  > App started successfully"
-    exit 0
+  echo "  > App started successfully"
+  exit 0
 fi
