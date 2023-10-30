@@ -1,7 +1,8 @@
 import Config
 
-# Do not print debug messages in production
-config :logger, level: :info
+config :logger,
+  backends: [:console, {LoggerFileBackend, :file}]
 
-# Runtime production configuration, including reading
-# of environment variables, is done on config/runtime.exs.
+config :logger, :file,
+  path: "/var/log/wordsetc.log",
+  level: :info

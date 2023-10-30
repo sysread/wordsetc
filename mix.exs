@@ -38,6 +38,7 @@ defmodule WordsEtc.MixProject do
       {:ecto_sqlite3, ">= 0.0.0"},
       {:floki, ">= 0.30.0", only: :test},
       {:jason, "~> 1.2"},
+      {:logger_file_backend, "~> 0.0.13"},
       {:phoenix, "~> 1.7.6"},
       {:phoenix_ecto, "~> 4.4"},
       {:phoenix_html, "~> 3.3"},
