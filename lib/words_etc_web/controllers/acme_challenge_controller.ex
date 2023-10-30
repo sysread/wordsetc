@@ -2,7 +2,8 @@ defmodule WordsEtcWeb.AcmeChallengeController do
   use WordsEtcWeb, :controller
 
   def index(conn, %{"path" => path}) do
-    file = Path.join(["/var/www/acme", path])
+    dir = "/var/www/acme/.well-known/acme-challenge"
+    file = Path.join([dir, path])
 
     if File.exists?(file) do
       send_file(conn, 200, file)
