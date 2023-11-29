@@ -120,6 +120,7 @@ defmodule WordsEtcWeb.Components.WordSolverForm do
 
         // Clear form input when X is clicked
         $("#clear-letters").on('click', function() {
+          $("#filter").val('');
           $("#letters").val('');
           $("#letters").focus();
           $("#word-solver-form").removeClass('was-validated').addClass('needs-validation');

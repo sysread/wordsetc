@@ -28,7 +28,12 @@ defmodule WordsEtcWeb.PageControllerTest do
     end
 
     test "valid input", %{conn: conn} do
-      assert conn |> post(~p"/", %{letters: "abc?"}) |> html_response(200)
+      conn = post(conn, ~p"/", %{letters: "abc?"})
+      assert html_response(conn, 200)
+      assert conn.assigns.letters == "abc?"
+      assert conn.assigns.sort == :score
+      assert conn.assigns.error == nil
+
       assert conn |> post(~p"/", %{letters: "abc?", sort: "score"}) |> html_response(200)
       assert conn |> post(~p"/", %{letters: "abc?", sort: "alpha"}) |> html_response(200)
     end

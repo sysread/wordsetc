@@ -26,4 +26,10 @@ defmodule WordsEtcWeb.Router do
     get "/", PageController, :home
     post "/", PageController, :solve
   end
+
+  scope "/api/v1", WordsEtcWeb do
+    pipe_through :api
+
+    post "/solve", ApiController, :solve
+  end
 end

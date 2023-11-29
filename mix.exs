@@ -36,6 +36,7 @@ defmodule WordsEtc.MixProject do
       {:dialyxir, "~> 1.3", only: [:dev, :test], runtime: false},
       {:ecto_sql, "~> 3.10"},
       {:ecto_sqlite3, ">= 0.0.0"},
+      {:ex_rated, "~> 1.3.2"},
       {:floki, ">= 0.30.0", only: :test},
       {:jason, "~> 1.2"},
       {:logger_file_backend, "~> 0.0.13"},
