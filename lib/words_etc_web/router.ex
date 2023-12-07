@@ -26,6 +26,7 @@ defmodule WordsEtcWeb.Router do
 
     get "/", PageController, :home
     post "/", PageController, :solve
+    get "/privacy", PageController, :privacy
   end
 
   scope "/api/v1", WordsEtcWeb do

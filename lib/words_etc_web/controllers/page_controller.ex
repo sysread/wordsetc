@@ -30,4 +30,10 @@ defmodule WordsEtcWeb.PageController do
         |> render(:solve, layout: false)
     end
   end
+
+  def privacy(conn, _params) do
+    conn
+    |> assign(:page_title, "Privacy Policy")
+    |> render(:privacy, layout: false)
+  end
 end
