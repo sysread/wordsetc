@@ -17,21 +17,17 @@ defmodule WordsEtcWeb.Router do
 
   scope "/.well-known/acme-challenge", WordsEtcWeb do
     pipe_through :browser
-
     get "/*path", AcmeChallengeController, :index
   end
 
   scope "/", WordsEtcWeb do
     pipe_through :browser
-
     get "/", PageController, :home
     post "/", PageController, :solve
-    get "/privacy", PageController, :privacy
   end
 
   scope "/api/v1", WordsEtcWeb do
     pipe_through :api
-
     post "/solve", ApiController, :solve
   end
 end

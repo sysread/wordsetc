@@ -26,7 +26,8 @@ defmodule WordsEtcWeb.Endpoint do
         [
           "favicon.ico",
           "pwa-manifest.json",
-          "service-worker.js"
+          "service-worker.js",
+          "privacy.html"
         ]
 
   # Code reloading can be explicitly enabled under the
