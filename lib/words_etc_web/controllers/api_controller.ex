@@ -14,7 +14,7 @@ defmodule WordsEtcWeb.ApiController do
   def solve(conn, params) do
     # Rate limit the requests
     case RateLimiter.check_rate(@bucket_name, @rate_limit, @period) do
-      {:limited, _} ->
+      {:error, _} ->
         conn
         |> put_status(:too_many_requests)
         |> json(%{error: "Rate limit exceeded"})

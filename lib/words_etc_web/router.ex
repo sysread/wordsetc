@@ -12,6 +12,7 @@ defmodule WordsEtcWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug WordsEtcWeb.Plugs.RequestLogger
   end
 
   scope "/.well-known/acme-challenge", WordsEtcWeb do
