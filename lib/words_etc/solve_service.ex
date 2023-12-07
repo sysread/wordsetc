@@ -40,7 +40,7 @@ defmodule WordsEtc.SolveService do
   end
 
   defp validate_filter(input) do
-    if input =~ ~r/^[A-Z0-9]{0,5}$/ do
+    if input =~ ~r/^[a-zA-Z0-9]{0,5}$/ do
       {:ok, String.upcase(input)}
     else
       {:invalid_input, "Expected up to 5 letters or numbers"}
